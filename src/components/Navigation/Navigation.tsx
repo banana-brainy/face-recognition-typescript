@@ -2,14 +2,24 @@ import { FC, MouseEventHandler } from 'react';
 
 interface INavigationProps {
     onRouteChange: (route: MouseEventHandler<HTMLInputElement> | undefined | string) => void;
+    isSignedIn: any
 }
 
-const Navigation: FC<INavigationProps> = ({ onRouteChange }) => {
-    return (
-        <nav style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <p onClick={() => onRouteChange('signin')} className='f3 link dim black underline pa3 pointer'>Sign Out</p>
-        </nav>
-    );
+const Navigation: FC<INavigationProps> = ({ onRouteChange, isSignedIn }) => {
+    if (isSignedIn) {
+        return (
+            <nav style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <p onClick={() => onRouteChange('signout')} className='f3 link dim black underline pa3 pointer'>Sign Out</p>
+            </nav>
+        );
+    } else {
+        return (
+            <nav style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <p onClick={() => onRouteChange('signin')} className='f3 link dim black underline pa3 pointer'>Sign In</p>
+                <p onClick={() => onRouteChange('register')} className='f3 link dim black underline pa3 pointer'>Register</p>
+            </nav> 
+        );
+    }
 }
 
 export default Navigation
