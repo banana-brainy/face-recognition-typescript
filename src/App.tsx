@@ -80,6 +80,8 @@ class App extends Component<{title: string}, IAppState> {
           : (
               route === 'signin'
               ? <SignIn onRouteChange={this.onRouteChange}/>
+              : route === 'signout'
+              ? <SignIn onRouteChange={this.onRouteChange}/> 
               : <Register onRouteChange={this.onRouteChange}/>
             )
         }

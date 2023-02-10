@@ -2,7 +2,7 @@ import { FC, MouseEventHandler } from 'react';
 
 interface INavigationProps {
     onRouteChange: (route: MouseEventHandler<HTMLInputElement> | undefined | string) => void;
-    isSignedIn: any
+    isSignedIn: boolean
 }
 
 const Navigation: FC<INavigationProps> = ({ onRouteChange, isSignedIn }) => {
