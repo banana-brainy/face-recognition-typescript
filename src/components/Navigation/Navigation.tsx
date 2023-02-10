@@ -1,13 +1,13 @@
 import { FC, MouseEventHandler } from 'react';
 
 interface INavigationProps {
-    onRouteChange: MouseEventHandler<HTMLInputElement>;
+    onRouteChange: (route: MouseEventHandler<HTMLInputElement> | undefined) => void;
 }
 
 const Navigation: FC<INavigationProps> = ({ onRouteChange }) => {
     return (
         <nav style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <p onClick={onRouteChange} className='f3 link dim black underline pa3 pointer'>Sign Out</p>
+            <p onClick={() => onRouteChange /* I have to add here a () */} className='f3 link dim black underline pa3 pointer'>Sign Out</p>
         </nav>
     );
 }

@@ -12,7 +12,7 @@ interface IAppState {
   input: string,
   imageUrl: string,
   box: Object,
-  route: MouseEventHandler<HTMLInputElement> | string
+  route: MouseEventHandler<HTMLInputElement> | undefined | string
 }
 
 class App extends Component<{title: string}, IAppState> {
@@ -52,8 +52,8 @@ class App extends Component<{title: string}, IAppState> {
     */
   }
 
-  onRouteChange = () => {
-    this.setState({route: "home"});
+  onRouteChange = (route: MouseEventHandler<HTMLInputElement> | undefined) => {
+    return this.setState({route: route});
   }
 
   render() {
