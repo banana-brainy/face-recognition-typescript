@@ -52,7 +52,7 @@ class App extends Component<{title: string}, IAppState> {
     */
   }
 
-  onRouteChange = (route: MouseEventHandler<HTMLInputElement> | undefined) => {
+  onRouteChange = (route: MouseEventHandler<HTMLInputElement> | undefined | string) => {
     return this.setState({route: route});
   }
 
