@@ -7,14 +7,15 @@ import Rank from './components/Rank/Rank';
 import ParticlesBg from 'particles-bg'
 import FaceRecognition from './components/FaceRecognition/FaceRecognition';
 import SignIn from './components/SignIn/SignIn';
-import Register from './components/Register/Register';
+import { Register, IRegisterResponse } from './components/Register/Register';
 
 interface IAppState {
   input: string,
   imageUrl: string,
-  box: Object,
+  /* box: Object, */
   route: MouseEventHandler<HTMLInputElement> | undefined | string,
-  isSignedIn: boolean
+  isSignedIn: boolean,
+  user: Object
 }
 
 class App extends Component<{title: string}, IAppState> {
@@ -23,10 +24,27 @@ class App extends Component<{title: string}, IAppState> {
     this.state = {
       input: '',
       imageUrl: '',
-      box: {},
+      /* box: {}, */
       route: 'signin',
-      isSignedIn: false
+      isSignedIn: false,
+      user: {
+        id: '',
+        name: '',
+        email: '',
+        entries: 0,
+        joined: Date
+      }
     }
+  }
+
+  loadUser = (data: IRegisterResponse) => {
+    this.setState({user: {
+      id: data.id,
+      name: data.name,
+      email: data.email,
+      entries: data.entries,
+      joined: data.joined
+    }})
   }
 
   /* calculateFaceLocation = (this parameter supposedly should be an Object from the Clarifai API ) => {
@@ -40,7 +58,7 @@ class App extends Component<{title: string}, IAppState> {
   onButtonSubmit = () => {
     this.setState({imageUrl: this.state.input}) /* This shows me an image from the input */
 
-    /*   The following lines of code are for getting a response from this old API which I can't use, so I will update it later
+    /* The following lines of code are for getting a response from this old API which I can't use, so I will update it later
     
       app.models
       .predict(
@@ -48,8 +66,7 @@ class App extends Component<{title: string}, IAppState> {
         this.state.input)      
       .then(response => this.calculateFaceLocation(response)
       .catch(err => console.log(err));
-    );
-    */
+    ); */
   }
 
   onRouteChange = (route: MouseEventHandler<HTMLInputElement> | undefined | string) => {
@@ -82,7 +99,7 @@ class App extends Component<{title: string}, IAppState> {
               ? <SignIn onRouteChange={this.onRouteChange}/>
               : route === 'signout'
               ? <SignIn onRouteChange={this.onRouteChange}/> 
-              : <Register onRouteChange={this.onRouteChange}/>
+              : <Register loadUser={this.loadUser} onRouteChange={this.onRouteChange}/>
             )
         }
       </div>

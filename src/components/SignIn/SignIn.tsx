@@ -36,7 +36,7 @@ class SignIn extends Component<ISignInProps, ISignInState> {
             })
         })
             .then(response => response.json())
-            .then(data => {
+            .then((data: string) => {
             if (data === 'success') {
                 this.props.onRouteChange('home')
             }
