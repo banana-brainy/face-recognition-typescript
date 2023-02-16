@@ -1,7 +1,13 @@
 import { Component, MouseEventHandler, ChangeEvent } from 'react';
 
+// onRouteChange function is given to SignIn class as a prompt,
+// coming from main App.tsx component.
 interface ISignInProps {
     onRouteChange: (route: MouseEventHandler<HTMLInputElement> | undefined | string) => void,
+}
+
+interface IUserForDatabase {
+    id: string;
 }
 
 interface ISignInState {
@@ -15,8 +21,7 @@ class SignIn extends Component<ISignInProps, ISignInState> {
     this.state = {
         signInEmail: '',
         signInPassword: ''
-    }
-  }
+    }}
     
     onEmailChange = (event: ChangeEvent<HTMLInputElement>) => {
         this.setState({signInEmail: event.target.value})
@@ -26,6 +31,8 @@ class SignIn extends Component<ISignInProps, ISignInState> {
         this.setState({signInPassword: event.target.value})
     }
 
+    // This function gets the response from the 'Sign-In' page.
+    // The response is the user object.
     onSubmitSignIn = () => {
         fetch('http://localhost:3000/signin', {
             method: 'post',
@@ -35,9 +42,9 @@ class SignIn extends Component<ISignInProps, ISignInState> {
                 password: this.state.signInPassword
             })
         })
-            .then(response => response.json())
-            .then((data: string) => {
-            if (data === 'success') {
+        .then(response => response.json())
+        .then((data: IUserForDatabase) => {
+            if (data.id) {
                 this.props.onRouteChange('home')
             }
         })
