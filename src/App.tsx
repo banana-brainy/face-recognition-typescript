@@ -47,7 +47,7 @@ class App extends Component<{title: string}, IAppState> {
     }})
   }
 
-  /* calculateFaceLocation = (this parameter supposedly should be an Object from the Clarifai API ) => {
+  /* calculateFaceLocation = (This parameter supposedly should be an Object from the Clarifai API) => {
     const image = document.getElementById("img")!;
   } */
 
@@ -55,12 +55,13 @@ class App extends Component<{title: string}, IAppState> {
     this.setState({input: event.target.value});
   }
 
+  // This function shows me an image from the input.
   onButtonSubmit = () => {
-    this.setState({imageUrl: this.state.input}) /* This shows me an image from the input */
-
-    /* The following lines of code are for getting a response from this old API which I can't use, so I will update it later
-    
-      app.models
+    this.setState({imageUrl: this.state.input})
+    // The following lines of code are for
+    // getting a response from this old version of the API which I can't use,
+    // so I will update the code later.
+    /* app.models
       .predict(
         Clarifai.FACE_DETECT_MODEL,
         this.state.input)      
