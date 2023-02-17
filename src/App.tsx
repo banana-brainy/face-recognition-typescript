@@ -64,7 +64,7 @@ class App extends Component<{title: string}, IAppState> {
   }
 
   // This function shows me an image from the input.
-  onButtonSubmit = () => {
+  onPictureSubmit = () => {
     this.setState({imageUrl: this.state.input})
     // The following lines of code are for
     // getting a response from this old version of the API which I can't use,
@@ -73,7 +73,11 @@ class App extends Component<{title: string}, IAppState> {
       .predict(
         Clarifai.FACE_DETECT_MODEL,
         this.state.input)      
-      .then(response => this.calculateFaceLocation(response)
+      .then(response => {
+        if (response) {
+        The 'fetch' method with the '/image' route was here.
+        }
+        this.calculateFaceLocation(response)
       .catch(err => console.log(err));
     ); */
   }
@@ -99,7 +103,7 @@ class App extends Component<{title: string}, IAppState> {
               <Rank name={this.state.user.name} entries={this.state.user.entries}/>
               <ImageLinkForm title='image link form'
               onInputChange={this.onInputChange}
-              onButtonSubmit={this.onButtonSubmit}
+              onPictureSubmit={this.onPictureSubmit}
               />
               <FaceRecognition imageUrl={imageUrl}/>
             </>
