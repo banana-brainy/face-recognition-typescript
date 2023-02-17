@@ -1,12 +1,15 @@
 import { Component, MouseEventHandler, ChangeEvent } from 'react';
 
 // onRouteChange function is given to SignIn class as a prompt,
-// coming from main App.tsx component.
+// coming from main App.tsx component. Same as loadUser.
+// But what does loadUser actually do?
+// At least let's make the distinct type.
 interface ISignInProps {
     onRouteChange: (route: MouseEventHandler<HTMLInputElement> | undefined | string) => void,
+    loadUser: any
 }
 
-interface IUserForDatabase {
+interface IIDOfUserFromDatabase {
     id: string;
 }
 
@@ -43,7 +46,7 @@ class SignIn extends Component<ISignInProps, ISignInState> {
             })
         })
         .then(response => response.json())
-        .then((data: IUserForDatabase) => {
+        .then((data: IIDOfUserFromDatabase) => {
             if (data.id) {
                 this.props.onRouteChange('home')
             }

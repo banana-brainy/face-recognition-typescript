@@ -7,7 +7,15 @@ import Rank from './components/Rank/Rank';
 import ParticlesBg from 'particles-bg'
 import FaceRecognition from './components/FaceRecognition/FaceRecognition';
 import SignIn from './components/SignIn/SignIn';
-import { Register, IRegisterResponse } from './components/Register/Register';
+import Register from './components/Register/Register';
+
+interface IForLoadingUser {
+  id: string,
+  name: string,
+  email: string,
+  entries: number,
+  joined: Date
+}
 
 interface IAppState {
   input: string,
@@ -15,7 +23,7 @@ interface IAppState {
   /* box: Object, */
   route: MouseEventHandler<HTMLInputElement> | undefined | string,
   isSignedIn: boolean,
-  user: Object
+  user: IForLoadingUser
 }
 
 class App extends Component<{title: string}, IAppState> {
@@ -32,12 +40,12 @@ class App extends Component<{title: string}, IAppState> {
         name: '',
         email: '',
         entries: 0,
-        joined: Date
+        joined: new Date()
       }
     }
   }
 
-  loadUser = (data: IRegisterResponse) => {
+  loadUser = (data: IForLoadingUser) => {
     this.setState({user: {
       id: data.id,
       name: data.name,
@@ -88,7 +96,7 @@ class App extends Component<{title: string}, IAppState> {
         { route === 'home'
           ? <>
               <Logo />
-              <Rank />
+              <Rank name={this.state.user.name} entries={this.state.user.entries}/>
               <ImageLinkForm title='image link form'
               onInputChange={this.onInputChange}
               onButtonSubmit={this.onButtonSubmit}
@@ -97,9 +105,11 @@ class App extends Component<{title: string}, IAppState> {
             </>
           : (
               route === 'signin'
-              ? <SignIn onRouteChange={this.onRouteChange}/>
+              // Passing the loadUser method to SignIn.
+              // Why?
+              ? <SignIn loadUser={this.loadUser} onRouteChange={this.onRouteChange}/>
               : route === 'signout'
-              ? <SignIn onRouteChange={this.onRouteChange}/> 
+              ? <SignIn loadUser={this.loadUser} onRouteChange={this.onRouteChange}/> 
               : <Register loadUser={this.loadUser} onRouteChange={this.onRouteChange}/>
             )
         }

@@ -1,7 +1,8 @@
 import { FC } from 'react';
 
 interface IRankProps{
-
+  name: string,
+  entries: number
 }
 
 const Rank: FC<IRankProps> = (props) => {
