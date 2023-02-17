@@ -6,7 +6,7 @@ import { Component, MouseEventHandler, ChangeEvent } from 'react';
 // At least let's make the distinct type.
 interface ISignInProps {
     onRouteChange: (route: MouseEventHandler<HTMLInputElement> | undefined | string) => void,
-    loadUser: any
+    loadUser: Function
 }
 
 interface IIDOfUserFromDatabase {
