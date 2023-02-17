@@ -1,7 +1,7 @@
 import { FC } from 'react';
 
 interface IRankProps{
-  name: string,
+  name?: string,
   entries: number
 }
 
@@ -12,7 +12,7 @@ const Rank: FC<IRankProps> = ({name, entries}) => {
         {`${name}, your current rank is `}
       </div>
       <div className='white f1'>
-        {`${entries}`}
+        {entries}
       </div>
     </div>
   );
