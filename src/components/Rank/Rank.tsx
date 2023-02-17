@@ -1,7 +1,7 @@
 import { FC } from 'react';
 
 interface IRankProps{
-  name: string,
+  name?: string,
   entries: number
 }
 
