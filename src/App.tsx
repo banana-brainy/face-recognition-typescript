@@ -64,18 +64,20 @@ class App extends Component<{title: string}, IAppState> {
   }
 
   // This function shows me an image from the input.
+  // Commented out lines are for getting a response
+  // from the old version of the Clarifai API,
+  // which I can't use, so I will update the code later.
+  // What do I want to do in this case?
+  // I want to update user's entries on every submit.
   onPictureSubmit = () => {
     this.setState({imageUrl: this.state.input})
-    // The following lines of code are for
-    // getting a response from this old version of the API which I can't use,
-    // so I will update the code later.
     /* app.models
       .predict(
         Clarifai.FACE_DETECT_MODEL,
         this.state.input)      
       .then(response => {
         if (response) {
-        The 'fetch' method with the '/image' route was here.
+        The 'fetch' method with the '/image' route should be here.
         }
         this.calculateFaceLocation(response)
       .catch(err => console.log(err));
