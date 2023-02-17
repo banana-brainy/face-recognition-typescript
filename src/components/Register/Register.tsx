@@ -11,7 +11,7 @@ interface IRegisterState {
     name: string
 }
 
-export interface IRegisterResponse {
+interface IRegisterResponse {
     id: string,
     name: string,
     email: string,
@@ -19,7 +19,7 @@ export interface IRegisterResponse {
     joined: Date
 }
 
-export class Register extends Component <IRegisterProps, IRegisterState> {
+class Register extends Component <IRegisterProps, IRegisterState> {
     constructor(props: IRegisterProps) {
         super(props);
         this.state = {
@@ -112,3 +112,5 @@ export class Register extends Component <IRegisterProps, IRegisterState> {
         )
     }
 };
+
+export default Register

@@ -7,7 +7,15 @@ import Rank from './components/Rank/Rank';
 import ParticlesBg from 'particles-bg'
 import FaceRecognition from './components/FaceRecognition/FaceRecognition';
 import SignIn from './components/SignIn/SignIn';
-import { Register, IRegisterResponse } from './components/Register/Register';
+import Register from './components/Register/Register';
+
+interface IForLoadingUser {
+  id: string,
+  name: string,
+  email: string,
+  entries: number,
+  joined: Date
+}
 
 interface IAppState {
   input: string,
@@ -15,7 +23,7 @@ interface IAppState {
   /* box: Object, */
   route: MouseEventHandler<HTMLInputElement> | undefined | string,
   isSignedIn: boolean,
-  user: Object
+  user: IForLoadingUser
 }
 
 class App extends Component<{title: string}, IAppState> {
@@ -32,12 +40,12 @@ class App extends Component<{title: string}, IAppState> {
         name: '',
         email: '',
         entries: 0,
-        joined: Date
+        joined: new Date()
       }
     }
   }
 
-  loadUser = (data: IRegisterResponse) => {
+  loadUser = (data: IForLoadingUser) => {
     this.setState({user: {
       id: data.id,
       name: data.name,
@@ -56,7 +64,7 @@ class App extends Component<{title: string}, IAppState> {
   }
 
   // This function shows me an image from the input.
-  onButtonSubmit = () => {
+  onPictureSubmit = () => {
     this.setState({imageUrl: this.state.input})
     // The following lines of code are for
     // getting a response from this old version of the API which I can't use,
@@ -65,7 +73,11 @@ class App extends Component<{title: string}, IAppState> {
       .predict(
         Clarifai.FACE_DETECT_MODEL,
         this.state.input)      
-      .then(response => this.calculateFaceLocation(response)
+      .then(response => {
+        if (response) {
+        The 'fetch' method with the '/image' route was here.
+        }
+        this.calculateFaceLocation(response)
       .catch(err => console.log(err));
     ); */
   }
@@ -88,18 +100,20 @@ class App extends Component<{title: string}, IAppState> {
         { route === 'home'
           ? <>
               <Logo />
-              <Rank />
+              <Rank name={this.state.user.name} entries={this.state.user.entries}/>
               <ImageLinkForm title='image link form'
               onInputChange={this.onInputChange}
-              onButtonSubmit={this.onButtonSubmit}
+              onPictureSubmit={this.onPictureSubmit}
               />
               <FaceRecognition imageUrl={imageUrl}/>
             </>
           : (
               route === 'signin'
-              ? <SignIn onRouteChange={this.onRouteChange}/>
+              // Passing the loadUser method to SignIn.
+              // Why?
+              ? <SignIn loadUser={this.loadUser} onRouteChange={this.onRouteChange}/>
               : route === 'signout'
-              ? <SignIn onRouteChange={this.onRouteChange}/> 
+              ? <SignIn loadUser={this.loadUser} onRouteChange={this.onRouteChange}/> 
               : <Register loadUser={this.loadUser} onRouteChange={this.onRouteChange}/>
             )
         }

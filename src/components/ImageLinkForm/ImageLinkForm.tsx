@@ -4,10 +4,10 @@ import './ImageLinkForm.css';
 interface IImageLinkFormProps{
   title: string;
   onInputChange: (event: ChangeEvent<HTMLInputElement>) => void;
-  onButtonSubmit: MouseEventHandler<HTMLButtonElement>;
+  onPictureSubmit: MouseEventHandler<HTMLButtonElement>;
 }
 
-const ImageLinkForm: FC<IImageLinkFormProps> = ({ onInputChange, onButtonSubmit }) => {
+const ImageLinkForm: FC<IImageLinkFormProps> = ({ onInputChange, onPictureSubmit }) => {
   return (
     <div>
       <p className='f3 pa3 white'>
@@ -18,7 +18,7 @@ const ImageLinkForm: FC<IImageLinkFormProps> = ({ onInputChange, onButtonSubmit 
           <input className='f4 pa2 w-70 center' type='text' onChange={onInputChange}/>
           <button
             className='w-30 grow f4 link ph3 pv2 dib white bg-light-purple'
-            onClick={onButtonSubmit}
+            onClick={onPictureSubmit}
             >Detect</button>
         </div>
       </div>
