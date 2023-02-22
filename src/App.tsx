@@ -85,6 +85,7 @@ class App extends Component<{title: string}, IAppState> {
         return { ...prevState, user: updatedUser }
       })
     })
+    .catch(console.log)
     /* app.models
       .predict(
         Clarifai.FACE_DETECT_MODEL,
