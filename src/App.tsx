@@ -26,23 +26,25 @@ interface IAppState {
   user: IForLoadingUser
 }
 
+const initialState = {
+    input: '',
+    imageUrl: '',
+    /* box: {}, */
+    route: 'signin',
+    isSignedIn: false,
+    user: {
+      id: '',
+      name: '',
+      email: '',
+      entries: 0,
+      joined: new Date()
+  }
+}
+
 class App extends Component<{title: string}, IAppState> {
   constructor(props: {title: string}) {
     super(props);
-    this.state = {
-      input: '',
-      imageUrl: '',
-      /* box: {}, */
-      route: 'signin',
-      isSignedIn: false,
-      user: {
-        id: '',
-        name: '',
-        email: '',
-        entries: 0,
-        joined: new Date()
-      }
-    }
+    this.state = initialState
   }
 
   loadUser = (data: IForLoadingUser) => {
@@ -83,6 +85,7 @@ class App extends Component<{title: string}, IAppState> {
         return { ...prevState, user: updatedUser }
       })
     })
+    .catch(console.log)
     /* app.models
       .predict(
         Clarifai.FACE_DETECT_MODEL,
@@ -98,7 +101,7 @@ class App extends Component<{title: string}, IAppState> {
 
   onRouteChange = (route: MouseEventHandler<HTMLInputElement> | undefined | string) => {
     if (route === 'signout') {
-      this.setState({isSignedIn: false})
+      this.setState(initialState)
     } else if (route === 'home') {
       this.setState({isSignedIn: true})
     }
