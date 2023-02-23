@@ -53,7 +53,7 @@ class Register extends Component <IRegisterProps, IRegisterState> {
         })
             .then(response => response.json())
             .then((user: IRegisterResponse) => {
-            if (user) {
+            if (user.id) {
                 this.props.loadUser(user)
                 this.props.onRouteChange('home')
             }
