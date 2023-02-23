@@ -9,6 +9,12 @@ import FaceRecognition from './components/FaceRecognition/FaceRecognition';
 import SignIn from './components/SignIn/SignIn';
 import Register from './components/Register/Register';
 
+/*
+const app = new Clarifai.App({
+  apiKey: 'YOUR API KEY HERE'
+});
+*/
+
 interface IForLoadingUser {
   id?: string,
   name?: string,
@@ -57,18 +63,31 @@ class App extends Component<{title: string}, IAppState> {
     }})
   }
 
-  /* calculateFaceLocation = (This parameter supposedly should be an Object from the Clarifai API) => {
-    const image = document.getElementById('img')!;
-  } */
+  /*
+  calculateFaceLocation = (data) => {
+    const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
+    const image = document.getElementById('inputimage');
+    const width = Number(image.width);
+    const height = Number(image.height);
+    return {
+      leftCol: clarifaiFace.left_col * width,
+      topRow: clarifaiFace.top_row * height,
+      rightCol: width - (clarifaiFace.right_col * width),
+      bottomRow: height - (clarifaiFace.bottom_row * height)
+    }
+  }
+  */
+
+  /*
+  displayFaceBox = (box) => {
+    this.setState({box: box});
+  }
+  */
 
   onInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     this.setState({input: event.target.value});
   }
 
-  // This function shows me an image from the input.
-  // Commented out lines are for getting a response
-  // from the old version of the Clarifai API,
-  // which I can't use, so I will update the code later.
   onPictureSubmit = () => {
     this.setState({imageUrl: this.state.input})
     fetch('http://localhost:3000/image', {
@@ -86,17 +105,37 @@ class App extends Component<{title: string}, IAppState> {
       })
     })
     .catch(console.log)
-    /* app.models
+    // New way of applying Clarifai API.
+    // Which probably should be before counting rank.
+    /*
+    app.models
       .predict(
-        Clarifai.FACE_DETECT_MODEL,
-        this.state.input)      
+        {
+          id: 'face-detection',
+          name: 'face-detection',
+          version: '6dc7e46bc9124c5c8824be4822abe105',
+          type: 'visual-detector',
+        }, this.state.input)
       .then(response => {
+        console.log('hi', response)
         if (response) {
-        The 'fetch' method with the '/image' route should be here.
+          fetch('http://localhost:3000/image', {
+            method: 'put',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+              id: this.state.user.id
+            })
+          })
+            .then(response => response.json())
+            .then(count => {
+              this.setState(Object.assign(this.state.user, { entries: count}))
+            })
+
         }
-        this.calculateFaceLocation(response)
+        this.displayFaceBox(this.calculateFaceLocation(response))
+      })
       .catch(err => console.log(err));
-    ); */
+    */
   }
 
   onRouteChange = (route: MouseEventHandler<HTMLInputElement> | undefined | string) => {
