@@ -9,12 +9,6 @@ import FaceRecognition from './components/FaceRecognition/FaceRecognition';
 import SignIn from './components/SignIn/SignIn';
 import Register from './components/Register/Register';
 
-/*
-const app = new Clarifai.App({
-  apiKey: 'YOUR API KEY HERE'
-});
-*/
-
 interface IForLoadingUser {
   id?: string,
   name?: string,
@@ -33,17 +27,17 @@ interface IAppState {
 }
 
 const initialState = {
-    input: '',
-    imageUrl: '',
-    /* box: {}, */
-    route: 'signin',
-    isSignedIn: false,
-    user: {
-      id: '',
-      name: '',
-      email: '',
-      entries: 0,
-      joined: new Date()
+  input: '',
+  imageUrl: '',
+  /* box: {}, */
+  route: 'signin',
+  isSignedIn: false,
+  user: {
+    id: '',
+    name: '',
+    email: '',
+    entries: 0,
+    joined: new Date()
   }
 }
 
@@ -90,6 +84,37 @@ class App extends Component<{title: string}, IAppState> {
 
   onPictureSubmit = () => {
     this.setState({imageUrl: this.state.input})
+    // The response is from the Clarifai.
+    // The commented out code is basically the same as my working code below,
+    // except two functions.
+    /*
+    fetch('http://localhost:3000/imageurl', {
+      method: 'post',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+      input: this.state.input
+      })
+    })
+    .then(response => response.json())
+    .then(response => {
+      console.log('hi', response)
+      if (response) {
+        fetch('http://localhost:3000/image', {
+          method: 'put',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            id: this.state.user.id
+          })
+        })
+          .then(response => response.json())
+          .then(count => {
+            this.setState(Object.assign(this.state.user, { entries: count}))
+          })
+      }
+      this.displayFaceBox(this.calculateFaceLocation(response))
+    })
+    .catch(err => console.log(err));
+    */
     fetch('http://localhost:3000/image', {
       method: 'put',
       headers: {'Content-Type': 'application/json'},
@@ -105,37 +130,6 @@ class App extends Component<{title: string}, IAppState> {
       })
     })
     .catch(console.log)
-    // New way of applying Clarifai API.
-    // Which probably should be before counting rank.
-    /*
-    app.models
-      .predict(
-        {
-          id: 'face-detection',
-          name: 'face-detection',
-          version: '6dc7e46bc9124c5c8824be4822abe105',
-          type: 'visual-detector',
-        }, this.state.input)
-      .then(response => {
-        console.log('hi', response)
-        if (response) {
-          fetch('http://localhost:3000/image', {
-            method: 'put',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-              id: this.state.user.id
-            })
-          })
-            .then(response => response.json())
-            .then(count => {
-              this.setState(Object.assign(this.state.user, { entries: count}))
-            })
-
-        }
-        this.displayFaceBox(this.calculateFaceLocation(response))
-      })
-      .catch(err => console.log(err));
-    */
   }
 
   onRouteChange = (route: MouseEventHandler<HTMLInputElement> | undefined | string) => {
