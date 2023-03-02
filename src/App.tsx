@@ -20,7 +20,7 @@ interface IForLoadingUser {
 interface IAppState {
   input: string,
   imageUrl: string,
-  /* box: Object, */
+  box: any,
   route: MouseEventHandler<HTMLInputElement> | undefined | string,
   isSignedIn: boolean,
   user: IForLoadingUser
@@ -29,7 +29,7 @@ interface IAppState {
 const initialState = {
   input: '',
   imageUrl: '',
-  /* box: {}, */
+  box: {},
   route: 'signin',
   isSignedIn: false,
   user: {
@@ -57,10 +57,9 @@ class App extends Component<{title: string}, IAppState> {
     }})
   }
 
-  /*
-  calculateFaceLocation = (data) => {
+  calculateFaceLocation = (data: any) => {
     const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
-    const image = document.getElementById('inputimage');
+    const image = document.getElementById('inputimage') as HTMLImageElement;
     const width = Number(image.width);
     const height = Number(image.height);
     return {
@@ -70,34 +69,26 @@ class App extends Component<{title: string}, IAppState> {
       bottomRow: height - (clarifaiFace.bottom_row * height)
     }
   }
-  */
-
-  /*
-  displayFaceBox = (box) => {
+ 
+  displayFaceBox = (box: any) => {
     this.setState({box: box});
   }
-  */
 
   onInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     this.setState({input: event.target.value});
   }
 
   onPictureSubmit = () => {
-    this.setState({imageUrl: this.state.input})
-    // The response is from the Clarifai.
-    // The commented out code is basically the same as my working code below,
-    // except two functions.
-    /*
+    this.setState({imageUrl: this.state.input});
     fetch('http://localhost:3000/imageurl', {
       method: 'post',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
-      input: this.state.input
+        input: this.state.input
       })
     })
     .then(response => response.json())
     .then(response => {
-      console.log('hi', response)
       if (response) {
         fetch('http://localhost:3000/image', {
           method: 'put',
@@ -106,30 +97,18 @@ class App extends Component<{title: string}, IAppState> {
             id: this.state.user.id
           })
         })
-          .then(response => response.json())
-          .then(count => {
-            this.setState(Object.assign(this.state.user, { entries: count}))
+        .then(response => response.json())
+        .then(count => {
+          this.setState((prevState: IAppState) => {
+            const updatedUser = Object.assign({}, prevState.user, { entries: count })
+            return { ...prevState, user: updatedUser }
           })
+        })
+        .catch(console.log)
       }
       this.displayFaceBox(this.calculateFaceLocation(response))
     })
     .catch(err => console.log(err));
-    */
-    fetch('http://localhost:3000/image', {
-      method: 'put',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-          id: this.state.user.id
-      })
-    })
-    .then(response => response.json())
-    .then(count => {
-      this.setState((prevState: IAppState) => {
-        const updatedUser = Object.assign({}, prevState.user, { entries: count })
-        return { ...prevState, user: updatedUser }
-      })
-    })
-    .catch(console.log)
   }
 
   onRouteChange = (route: MouseEventHandler<HTMLInputElement> | undefined | string) => {
@@ -142,7 +121,7 @@ class App extends Component<{title: string}, IAppState> {
   }
 
   render() {
-    const { isSignedIn, imageUrl, route } = this.state;
+    const { isSignedIn, imageUrl, route, box } = this.state;
     return (
       <div className="App">
         <ParticlesBg type="cobweb" bg={true} />
@@ -155,7 +134,7 @@ class App extends Component<{title: string}, IAppState> {
               onInputChange={this.onInputChange}
               onPictureSubmit={this.onPictureSubmit}
               />
-              <FaceRecognition imageUrl={imageUrl}/>
+              <FaceRecognition box={box} imageUrl={imageUrl}/>
             </>
           : (
               route === 'signin'
