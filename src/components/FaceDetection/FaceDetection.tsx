@@ -1,20 +1,25 @@
 import { FC } from 'react';
-import './FaceRecognition.css';
+import './FaceDetection.css';
 
-interface IFaceRecognitionProps {
+interface IFaceDetectionProps {
     imageUrl: string;
-    box: any;
+    box: {
+        topRow: number,
+        rightCol: number,
+        bottomRow: number,
+        leftCol: number;
+    }
 }
 
-const FaceRecognition: FC<IFaceRecognitionProps> = ({ imageUrl, box }) => {
+const FaceDetection: FC<IFaceDetectionProps> = ({ imageUrl, box }) => {
     return (
         <div className='center ma'>
             <div className='absolute mt2'>
             <img id='inputimage' alt='' src={imageUrl} width='500px' height='auto'/>
             <div className='bounding-box' style={{top: box.topRow, right: box.rightCol, bottom: box.bottomRow, left: box.leftCol}}></div>
-        </div>
+            </div>
         </div> 
     );
 }
 
-export default FaceRecognition
+export default FaceDetection

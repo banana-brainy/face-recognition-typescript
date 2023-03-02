@@ -3,11 +3,25 @@ import { Component, ChangeEvent, MouseEventHandler } from 'react';
 import Navigation from './components/Navigation/Navigation';
 import Logo from './components/Logo/Logo';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
-import Rank from './components/Rank/Rank';
+import Rank from './components/Entries/Entries';
 import ParticlesBg from 'particles-bg'
-import FaceRecognition from './components/FaceRecognition/FaceRecognition';
+import FaceDetection from './components/FaceDetection/FaceDetection';
 import SignIn from './components/SignIn/SignIn';
 import Register from './components/Register/Register';
+
+interface IBox {
+  topRow: number,
+  rightCol: number,
+  bottomRow: number,
+  leftCol: number
+}
+
+interface IClarifaiFace {
+  left_col: number,
+  top_row: number,
+  right_col: number,
+  bottom_row: number
+}
 
 interface IForLoadingUser {
   id?: string,
@@ -20,7 +34,7 @@ interface IForLoadingUser {
 interface IAppState {
   input: string,
   imageUrl: string,
-  box: any,
+  box: IBox,
   route: MouseEventHandler<HTMLInputElement> | undefined | string,
   isSignedIn: boolean,
   user: IForLoadingUser
@@ -29,7 +43,12 @@ interface IAppState {
 const initialState = {
   input: '',
   imageUrl: '',
-  box: {},
+  box: { 
+    topRow: 1000,
+    rightCol: 1000,
+    bottomRow: 1000,
+    leftCol: 1000
+  },
   route: 'signin',
   isSignedIn: false,
   user: {
@@ -57,7 +76,7 @@ class App extends Component<{title: string}, IAppState> {
     }})
   }
 
-  calculateFaceLocation = (data: any) => {
+  calculateFaceLocation = (data: { outputs: { data: { regions: { region_info: { bounding_box: IClarifaiFace }; }[]; }; }[]; }) => {
     const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
     const image = document.getElementById('inputimage') as HTMLImageElement;
     const width = Number(image.width);
@@ -70,7 +89,7 @@ class App extends Component<{title: string}, IAppState> {
     }
   }
  
-  displayFaceBox = (box: any) => {
+  displayFaceBox = (box: IBox) => {
     this.setState({box: box});
   }
 
@@ -79,8 +98,14 @@ class App extends Component<{title: string}, IAppState> {
   }
 
   onPictureSubmit = () => {
+    this.setState({ box: { 
+      topRow: 1000,
+      rightCol: 1000,
+      bottomRow: 1000,
+      leftCol: 1000
+    }})
     this.setState({imageUrl: this.state.input});
-    fetch('http://localhost:3000/imageurl', {
+    fetch('http://localhost:3000/apicall', {
       method: 'post',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
@@ -90,7 +115,7 @@ class App extends Component<{title: string}, IAppState> {
     .then(response => response.json())
     .then(response => {
       if (response) {
-        fetch('http://localhost:3000/image', {
+        fetch('http://localhost:3000/count', {
           method: 'put',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({
@@ -98,7 +123,7 @@ class App extends Component<{title: string}, IAppState> {
           })
         })
         .then(response => response.json())
-        .then(count => {
+        .then((count: number) => {
           this.setState((prevState: IAppState) => {
             const updatedUser = Object.assign({}, prevState.user, { entries: count })
             return { ...prevState, user: updatedUser }
@@ -108,7 +133,15 @@ class App extends Component<{title: string}, IAppState> {
       }
       this.displayFaceBox(this.calculateFaceLocation(response))
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+      this.setState({ box: { 
+        topRow: 1000,
+        rightCol: 1000,
+        bottomRow: 1000,
+        leftCol: 1000
+      }})
+      console.log(err)
+    });
   }
 
   onRouteChange = (route: MouseEventHandler<HTMLInputElement> | undefined | string) => {
@@ -130,16 +163,11 @@ class App extends Component<{title: string}, IAppState> {
           ? <>
               <Logo />
               <Rank name={this.state.user.name} entries={this.state.user.entries}/>
-              <ImageLinkForm title='image link form'
-              onInputChange={this.onInputChange}
-              onPictureSubmit={this.onPictureSubmit}
-              />
-              <FaceRecognition box={box} imageUrl={imageUrl}/>
+              <ImageLinkForm title='image link form' onInputChange={this.onInputChange} onPictureSubmit={this.onPictureSubmit}/>
+              <FaceDetection box={box} imageUrl={imageUrl}/>
             </>
           : (
               route === 'signin'
-              // Passing the loadUser method to SignIn.
-              // Why?
               ? <SignIn loadUser={this.loadUser} onRouteChange={this.onRouteChange}/>
               : route === 'signout'
               ? <SignIn loadUser={this.loadUser} onRouteChange={this.onRouteChange}/> 
