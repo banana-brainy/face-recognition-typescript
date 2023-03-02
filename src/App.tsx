@@ -32,6 +32,7 @@ interface IForLoadingUser {
 }
 
 interface IAppState {
+  displayBox: boolean,
   input: string,
   imageUrl: string,
   box: IBox,
@@ -41,13 +42,14 @@ interface IAppState {
 }
 
 const initialState = {
+  displayBox: false,
   input: '',
   imageUrl: '',
   box: { 
-    topRow: 1000,
-    rightCol: 1000,
-    bottomRow: 1000,
-    leftCol: 1000
+    topRow: 0,
+    rightCol: 0,
+    bottomRow: 0,
+    leftCol: 0
   },
   route: 'signin',
   isSignedIn: false,
@@ -90,7 +92,10 @@ class App extends Component<{title: string}, IAppState> {
   }
  
   displayFaceBox = (box: IBox) => {
-    this.setState({box: box});
+    this.setState({
+      box: box,
+      displayBox: true
+    });
   }
 
   onInputChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -98,12 +103,6 @@ class App extends Component<{title: string}, IAppState> {
   }
 
   onPictureSubmit = () => {
-    this.setState({ box: { 
-      topRow: 1000,
-      rightCol: 1000,
-      bottomRow: 1000,
-      leftCol: 1000
-    }})
     this.setState({imageUrl: this.state.input});
     fetch('http://localhost:3000/apicall', {
       method: 'post',
@@ -134,12 +133,7 @@ class App extends Component<{title: string}, IAppState> {
       this.displayFaceBox(this.calculateFaceLocation(response))
     })
     .catch(err => {
-      this.setState({ box: { 
-        topRow: 1000,
-        rightCol: 1000,
-        bottomRow: 1000,
-        leftCol: 1000
-      }})
+      this.setState({ displayBox: false })
       console.log(err)
     });
   }
@@ -154,7 +148,7 @@ class App extends Component<{title: string}, IAppState> {
   }
 
   render() {
-    const { isSignedIn, imageUrl, route, box } = this.state;
+    const { isSignedIn, imageUrl, route, box, displayBox } = this.state;
     return (
       <div className="App">
         <ParticlesBg type="cobweb" bg={true} />
@@ -164,7 +158,7 @@ class App extends Component<{title: string}, IAppState> {
               <Logo />
               <Rank name={this.state.user.name} entries={this.state.user.entries}/>
               <ImageLinkForm title='image link form' onInputChange={this.onInputChange} onPictureSubmit={this.onPictureSubmit}/>
-              <FaceDetection box={box} imageUrl={imageUrl}/>
+              <FaceDetection displayBox={displayBox} box={box} imageUrl={imageUrl}/>
             </>
           : (
               route === 'signin'
