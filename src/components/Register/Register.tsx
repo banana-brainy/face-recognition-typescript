@@ -42,7 +42,7 @@ class Register extends Component <IRegisterProps, IRegisterState> {
     }
 
     onSubmitSignIn = () => {
-        fetch('http://localhost:3000/register', {
+        fetch('https://face-detection-api-ejmw.onrender.com/register', {
             method: 'post',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({

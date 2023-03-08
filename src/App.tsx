@@ -104,7 +104,7 @@ class App extends Component<{title: string}, IAppState> {
 
   onPictureSubmit = () => {
     this.setState({imageUrl: this.state.input});
-    fetch('http://localhost:3000/apicall', {
+    fetch('https://face-detection-api-ejmw.onrender.com/apicall', {
       method: 'post',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
@@ -114,7 +114,7 @@ class App extends Component<{title: string}, IAppState> {
     .then(response => response.json())
     .then(response => {
       if (response) {
-        fetch('http://localhost:3000/count', {
+        fetch('https://face-detection-api-ejmw.onrender.com/count', {
           method: 'put',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({
